@@ -1,0 +1,15 @@
+{
+  "name": "simple-tracker-example",
+  "private": true,
+  "scripts": {
+    "start": "meteor run"
+  },
+  "dependencies": {
+    "mapbox-gl": "^0.20.0",
+    "meteor-node-stubs": "~0.2.0",
+    "moment": "^2.13.0",
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0",
+    "request": "^2.72.0"
+  }
+}

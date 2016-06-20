@@ -1,0 +1,6 @@
+{
+  "public": {
+    "mapbox_accessToken": "<mapbox public access token>"
+  },
+  "hologram_api": "<hologram cloud API>"
+}
