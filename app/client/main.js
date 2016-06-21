@@ -2,8 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import { render } from 'react-dom';
 
-import Map from '../imports/Map.js';
+import MapContainer from '../imports/ui/containers/MapContainer.js';
 
 Meteor.startup(() => {
-  render(<Map />, document.getElementById('app'));
+  render(<MapContainer />, document.getElementById('app'));
 });

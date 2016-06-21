@@ -1,0 +1,1 @@
+import '../imports/api/Locations/publications'
