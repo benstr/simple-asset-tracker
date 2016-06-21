@@ -11,6 +11,19 @@ export default class Map extends React.Component {
     super(props);
   }
 
+  componentWillReceiveProps(nextProps) {
+    let newRoute = {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "LineString",
+        "coordinates": nextProps.route
+      }
+    };
+
+    this.state.routeSource.setData(newRoute);
+  }
+
   componentDidMount() {
     let self = this;
     mapboxgl.accessToken = Meteor.settings.public.mapbox_accessToken;
@@ -19,7 +32,23 @@ export default class Map extends React.Component {
       container: 'map', // container id
       style: 'mapbox://styles/mapbox/light-v9', //stylesheet location
       center: [-87.63167179, 41.8905963], // starting position
-      zoom: 10 // starting zoom
+      zoom: 15 // starting zoom
+    });
+
+    let routeSource = new mapboxgl.GeoJSONSource({
+      data: {
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+          "type": "LineString",
+          "coordinates": self.props.route
+        }
+      }
+    });
+
+    self.setState({
+      map: map,
+      routeSource: routeSource
     });
 
     // Some generic coordinates and map layers to get something on the screen
@@ -56,17 +85,7 @@ export default class Map extends React.Component {
       });
 
 
-      map.addSource("route", {
-        "type": "geojson",
-        "data": {
-          "type": "Feature",
-          "properties": {},
-          "geometry": {
-            "type": "LineString",
-            "coordinates": self.props.route
-          }
-        }
-      });
+      map.addSource("route", self.state.routeSource);
 
       map.addLayer({
         "id": "route",

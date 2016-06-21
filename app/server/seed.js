@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { HTTP } from 'meteor/http';
 import { Locations } from '../imports/api/Locations/collection'
 
-const apiLimit = 1000;
+const API_LIMIT = 1000;
 
 Meteor.startup( () => {
   if (Locations.find().count() === 0) {
@@ -12,7 +12,7 @@ Meteor.startup( () => {
     while (!allDataFetched) {
       try {
         rawResult = HTTP.call("GET",
-          `https://dashboard.konekt.io/api/1/csr/rdm/?apikey=${Meteor.settings.hologram_api}&tagname=${Meteor.settings.hologram_device_tag}&startat=${prevId}&limit=${apiLimit}`
+          `https://dashboard.konekt.io/api/1/csr/rdm/?apikey=${Meteor.settings.hologram_api}&tagname=${Meteor.settings.hologram_device_tag}&startat=${prevId}&limit=${API_LIMIT}`
         );      } catch (e) {
         console.log(e);
         throw new Meteor.Error("hologram-get-failed", "Error calling Hologram API, see console for message");
@@ -26,10 +26,9 @@ Meteor.startup( () => {
       if(rawResult.data.data){
 
         let resultLength = rawResult.data.data.length;
-        let prevLoc = {};
 
         console.log(resultLength);
-        if(resultLength != apiLimit) {
+        if(resultLength != API_LIMIT) {
           allDataFetched = true;
         }
 
@@ -48,12 +47,17 @@ Meteor.startup( () => {
             let newDoc = {
               logged: new Date(d.logged),
               hologramId: d.id,
+              hologramRecordId: d.record_id,
               coords: lonLat.coords
             };
 
-            if( !prevLoc.coords || prevLoc.coords != lonLat.coords ) {
-              prevLoc = newDoc;
-              Locations.insert(newDoc);
+            let locationExists = Locations.findOne({hologramRecordId: d.record_id});
+
+            if( !locationExists ) {
+              let newLocation = Locations.insert(newDoc);
+              console.log("Inserted new Location received from Hologram.io Cloud ", newLocation);
+            } else {
+              console.log("No new location found");
             }
           }
 
