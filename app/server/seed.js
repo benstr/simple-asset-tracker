@@ -37,26 +37,23 @@ Meteor.startup( () => {
 
           let payload = JSON.parse(d.data);
           let coords = new Buffer(payload.data, "base64" );
-          let latLon;
+          let lonLat;
           try {
-            latLon = JSON.parse(coords.toString());
+            lonLat = JSON.parse(coords.toString());
           } catch (e) {
             console.log(e);
           }
 
-          if(latLon) {
+          if(lonLat) {
             let newDoc = {
               logged: new Date(d.logged),
               hologramId: d.id,
-              coords: []
+              coords: lonLat.coords
             };
-            newDoc.coords.push(latLon.coords[1]);
-            newDoc.coords.push(latLon.coords[0]);
 
-            if( !prevLoc.coords || (prevLoc.coords[0] != latLon.coords[1] && prevLoc.coords[1] != latLon.coords[0] ) ) {
-              //console.log(newDoc);
+            if( !prevLoc.coords || prevLoc.coords != lonLat.coords ) {
               prevLoc = newDoc;
-              console.log(Locations.insert(newDoc));
+              Locations.insert(newDoc);
             }
           }
 

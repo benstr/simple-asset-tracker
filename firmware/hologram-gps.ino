@@ -175,9 +175,9 @@ void handleGPS() {
         Serial.print(" quality: "); Serial.println((int)GPS.fixquality); 
         if (GPS.fix) {
             Serial.print("Location: ");
-            Serial.print(GPS.latitude, 4); Serial.print(GPS.lat);
+            Serial.print(GPS.longitude, 8); Serial.println(GPS.lon);
             Serial.print(", "); 
-            Serial.print(GPS.longitude, 4); Serial.println(GPS.lon);
+            Serial.print(GPS.latitude, 8); Serial.print(GPS.lat);
 
             Serial.print("Speed (knots): "); Serial.println(GPS.speed);
             Serial.print("Angle: "); Serial.println(GPS.angle);
@@ -187,10 +187,10 @@ void handleGPS() {
             // Send latitude and longitude to cloud
             String loc;
             char coordbuf[16];
-            dtostrf(GPS.latitudeDegrees, 0, 4, coordbuf);
+            dtostrf(GPS.longitudeDegrees, 0, 8, coordbuf);
             loc.concat(coordbuf);
             loc.concat(", ");
-            dtostrf(GPS.longitudeDegrees, 0, 4, coordbuf);
+            dtostrf(GPS.latitudeDegrees, 0, 8, coordbuf);
             loc.concat(coordbuf);
             String ret = "{\"coords\": [";
             ret.concat(loc);
