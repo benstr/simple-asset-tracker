@@ -4,9 +4,9 @@ Near real-time GPS tracker powered by Hologram.io cellular IoT platform and Mete
 
 ## `/firmware`
 
-This is the Arduino IDE file used to flash Hologram's Dash board (cellular microcontroller).
+Arduino IDE file used to flash Hologram's Dash board (cellular microcontroller).
 
-To get started:
+Get started:
 
 1. Buy a Dash board, Hologram SIM, and Adafruit Ultimate GPS Breakout v3
 2. Activate SIM instantly through the Hologram Dashboard
@@ -15,9 +15,9 @@ To get started:
  
 ## `/app`
 
-This is the MeteorJS app which connects to Hologram's Cloud
+MeteorJS app which connects to Hologram's Cloud
 
-To get started:
+Get started:
 
 1. Copy `/app/settings-example.json` to `/app/settings.json`
 2. In `/app/settings.json` set your `mapbox_accessToken`, `hologram_api`, and `hologram_device_tag`
