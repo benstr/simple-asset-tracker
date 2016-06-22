@@ -52,12 +52,13 @@ Meteor.startup( () => {
             };
 
             let locationExists = Locations.findOne({hologramRecordId: d.record_id});
+            let prevLocation = Locations.findOne({},{sort:{logged:-1}}) || {coords:[0,0]};
 
-            if( !locationExists ) {
+            if( !locationExists && prevLocation.coords != lonLat.coords ) {
               let newLocation = Locations.insert(newDoc);
               console.log("Inserted new Location received from Hologram.io Cloud ", newLocation);
             } else {
-              console.log("No new location found");
+              console.log("DUP location found");
             }
           }
 

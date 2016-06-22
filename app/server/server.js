@@ -48,8 +48,9 @@ Meteor.setInterval(() => {
         };
 
         let locationExists = Locations.findOne({hologramRecordId: d.record_id});
+        let prevLocation = Locations.findOne({},{sort:{logged:-1}});
 
-        if( !locationExists ) {
+        if( !locationExists && prevLocation.coords != lonLat.coords ) {
           let newLocation = Locations.insert(newDoc);
           console.log("Inserted new Location received from Hologram.io Cloud ", newLocation);
         } else {
