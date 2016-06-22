@@ -21,17 +21,36 @@ export default class Map extends React.Component {
       }
     };
 
-    this.state.routeSource.setData(newRoute);
+    let newMarker = {
+      "type": "FeatureCollection",
+      "features": [{
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": nextProps.currentLocation
+        },
+        "properties": {
+          "marker-color": "#3bb2d0",
+          "marker-symbol": "circle"
+        }
+      }]
+    };
+
+    if (this.state) {
+      this.state.routeSource.setData(newRoute);
+      this.state.markerSource.setData(newMarker);
+      this.state.mapbox.setCenter(nextProps.currentLocation);
+    }
   }
 
   componentDidMount() {
     let self = this;
     mapboxgl.accessToken = Meteor.settings.public.mapbox_accessToken;
 
-    const map = new mapboxgl.Map({
+    const mapbox = new mapboxgl.Map({
       container: 'map', // container id
       style: 'mapbox://styles/mapbox/light-v9', //stylesheet location
-      center: [-87.63167179, 41.8905963], // starting position
+      center: self.props.currentLocation, // starting position
       zoom: 15 // starting zoom
     });
 
@@ -46,48 +65,33 @@ export default class Map extends React.Component {
       }
     });
 
+    let markerSource = new mapboxgl.GeoJSONSource({
+      data: {
+        "type": "FeatureCollection",
+        "features": [{
+          "type": "Feature",
+          "geometry": {
+            "type": "Point",
+            "coordinates": self.props.currentLocation
+          },
+          "properties": {
+            "marker-color": "#3bb2d0",
+            "marker-symbol": "circle"
+          }
+        }]
+      }
+    });
+
     self.setState({
-      map: map,
-      routeSource: routeSource
+      mapbox: mapbox,
+      routeSource: routeSource,
+      markerSource: markerSource
     });
 
     // Some generic coordinates and map layers to get something on the screen
-    map.on('load', function () {
-      map.addSource("markers", {
-        "type": "geojson",
-        "data": {
-          "type": "FeatureCollection",
-          "features": [{
-            "type": "Feature",
-            "geometry": {
-              "type": "Point",
-              "coordinates": [-87.63167179, 41.8905963]
-            },
-            "properties": {
-              "marker-color": "#3bb2d0",
-              "marker-symbol": "circle"
-            }
-          }]
-        }
-      });
-
-      map.addLayer({
-        "id": "markers",
-        "type": "symbol",
-        "source": "markers",
-        "layout": {
-          "icon-image": "{marker-symbol}-15",
-          "text-field": "{title}",
-          "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-          "text-offset": [0, 0.6],
-          "text-anchor": "top"
-        }
-      });
-
-
-      map.addSource("route", self.state.routeSource);
-
-      map.addLayer({
+    mapbox.on('load', function () {
+      mapbox.addSource("route", self.state.routeSource);
+      mapbox.addLayer({
         "id": "route",
         "type": "line",
         "source": "route",
@@ -100,7 +104,21 @@ export default class Map extends React.Component {
           "line-width": 8
         }
       });
-      
+
+      mapbox.addSource("marker", self.state.markerSource);
+      mapbox.addLayer({
+        "id": "marker",
+        "type": "symbol",
+        "source": "marker",
+        "layout": {
+          "icon-image": "{marker-symbol}-15",
+          "text-field": "{title}",
+          "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+          "text-offset": [0, 0.6],
+          "text-anchor": "top"
+        }
+      });
+
     });
   }
 

@@ -6,15 +6,14 @@ import Map from '../pages/Map.js';
 export default createContainer(() => {
 
   Meteor.subscribe('locations');
-  console.log(Locations.find({}).count());
-
-  let locations = Locations.find({}, { sort: { logged: 1 } }).fetch();
+  let locations = Locations.find({});
 
   return {
-    locations: locations,
-    route: locations.map( loc => {
+    locations: locations.fetch(),
+    route: locations.fetch().map( loc => {
       return loc.coords
-    })
+    }),
+    currentLocation: locations.count() ? locations.fetch().pop().coords : [-87.1,41.1]
   };
 
 }, Map);
