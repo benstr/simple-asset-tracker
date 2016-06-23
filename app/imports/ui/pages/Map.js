@@ -1,10 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import React from 'react';
 
-// Had to import form within the node module because this library is trying too hard
-// With meteor it does not treat it as client-side
-// https://github.com/mapbox/mapbox-gl-js/issues/1649
-import mapboxgl from '../../../node_modules/mapbox-gl/dist/mapbox-gl';
+// mapboxgl is a global saved under ./app/client/compatibility
 
 export default class Map extends React.Component {
   constructor(props) {

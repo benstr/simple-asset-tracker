@@ -2,5 +2,5 @@ import { Meteor } from 'meteor/meteor';
 import { Locations } from './collection';
 
 Meteor.publish("locations", function (){
-  return Locations.find({},{sort:{logged:1}});
+  return Locations.find({},{ sort:{ logged:-1 }, limit: 200 });
 });
