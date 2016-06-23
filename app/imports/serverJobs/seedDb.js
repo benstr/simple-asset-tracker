@@ -1,11 +1,11 @@
 import { Meteor } from 'meteor/meteor';
 import { HTTP } from 'meteor/http';
-import { Locations } from '../imports/api/Locations/collection'
+import { Locations } from '../api/Locations/collection'
 
 const API_LIMIT = 1000;
 
 Meteor.startup( () => {
-  if (Locations.find().count() === 0) {
+  if (Locations.find().count() === 0 && Meteor.settings.seedDb ) {
     
     let rawResult, prevId = "1000000", allDataFetched = false;
 

@@ -1,7 +1,8 @@
 {
+  "hologram_api": "<hologram cloud API>",
+  "hologram_device_tag": "_DEVICE_99999_",
+  "seedDb": false,
   "public": {
     "mapbox_accessToken": "<mapbox public access token>"
-  },
-  "hologram_api": "<hologram cloud API>",
-  "hologram_device_tag": "_DEVICE_99999_"
+  }
 }
